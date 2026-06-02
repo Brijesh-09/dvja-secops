@@ -161,7 +161,7 @@
         <repository>
             <id>jfrog-virtual</id>
             <name>JFrog Virtual Repository</name>
-            <url>${jfrog.url}/maven-virtual</url>
+            <url>${jfrog.url}/secops-pipeline-maven-virtual</url>
             <releases><enabled>true</enabled></releases>
             <snapshots><enabled>true</enabled></snapshots>
         </repository>

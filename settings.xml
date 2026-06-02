@@ -1,32 +1,39 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!--
-    settings.xml — Maven credentials file
-    Same as my-app project — credentials injected
-    by Jenkins at runtime via -Djfrog.user and -Djfrog.apikey
--->
 <settings xmlns="http://maven.apache.org/SETTINGS/1.0.0"
           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
           xsi:schemaLocation="
           http://maven.apache.org/SETTINGS/1.0.0
           https://maven.apache.org/xsd/settings-1.0.0.xsd">
 
+    <mirrors>
+        <mirror>
+            <id>jfrog-mirror</id>
+            <name>JFrog Virtual Mirror</name>
+            <url>https://trialxcztq9.jfrog.io/artifactory/maven-virtual</url>
+            <mirrorOf>*</mirrorOf>
+        </mirror>
+    </mirrors>
+
     <servers>
 
-        <!-- Virtual repo — used for PULLING all dependencies -->
+        <server>
+            <id>jfrog-mirror</id>
+            <username>${jfrog.user}</username>
+            <password>${jfrog.apikey}</password>
+        </server>
+
         <server>
             <id>jfrog-virtual</id>
             <username>${jfrog.user}</username>
             <password>${jfrog.apikey}</password>
         </server>
 
-        <!-- Release repo — used for PUSHING release builds -->
         <server>
             <id>jfrog-release</id>
             <username>${jfrog.user}</username>
             <password>${jfrog.apikey}</password>
         </server>
 
-        <!-- Snapshot repo — used for PUSHING snapshot builds -->
         <server>
             <id>jfrog-snapshot</id>
             <username>${jfrog.user}</username>
