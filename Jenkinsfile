@@ -3,6 +3,7 @@ pipeline {
 
     tools {
         maven 'Maven-3.9'
+        nodejs 'NodeJS-26'
     }
 
     environment {
@@ -48,28 +49,34 @@ pipeline {
                 """
             }
         }
+        stage('Verify Node') { 
+            steps { 
+                nodejs('NodeJS-26') {
+                     sh ''' echo "===== NODE DEBUG =====" echo "PATH=$PATH" which node || true node -v || true which npm || true npm -v || true echo "======================" ''' } } }
 
         // =====================================================
         // STAGE 3: SONARCLOUD ANALYSIS
         // =====================================================
         stage('SonarCloud Analysis') {
-            steps {
-                echo '🔍 Running SonarCloud security analysis on DVJA...'
-                withSonarQubeEnv('SonarCloud') {
-                    sh """
-                        mvn sonar:sonar \
-                            -s settings.xml \
-                            -Djfrog.user=${JFROG_USER} \
-                            -Djfrog.apikey=${JFROG_APIKEY} \
-                            -Dsonar.projectKey=${SONAR_PROJECT} \
-                            -Dsonar.organization=${SONAR_ORG} \
-                            -Dsonar.host.url=https://sonarcloud.io \
-                            -Dsonar.token=${SONAR_TOKEN}
-                    """
-                }
-            }
-        }
+    steps {
+        echo '🔍 Running SonarCloud security analysis on DVJA...'
 
+        withSonarQubeEnv('SonarCloud') {
+            sh """
+                mvn sonar:sonar \
+                    -s settings.xml \
+                    -Djfrog.user=${JFROG_USER} \
+                    -Djfrog.apikey=${JFROG_APIKEY} \
+                    -Dsonar.projectKey=${SONAR_PROJECT} \
+                    -Dsonar.organization=${SONAR_ORG} \
+                    -Dsonar.host.url=https://sonarcloud.io \
+                    -Dsonar.token=${SONAR_TOKEN} \
+                    -Dsonar.sources=src/main/java \
+                    -Dsonar.exclusions=**/*.js,**/*.ts,**/*.css,**/*.html,**/*.jsp
+            """
+        }
+    }
+}
         // =====================================================
         // STAGE 4: QUALITY GATE
         // =====================================================
