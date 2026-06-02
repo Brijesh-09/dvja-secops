@@ -42,6 +42,7 @@ pipeline {
             steps {
                 echo '🔨 Building DVJA and pulling dependencies from JFrog...'
                 sh """
+                    rm -rf /var/jenkins_home/.m2/repository/org/apache/maven/plugins/maven-clean-plugin
                     mvn clean compile \
                         -s settings.xml \
                         -Djfrog.user=${JFROG_USER} \
