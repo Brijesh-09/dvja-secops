@@ -13,6 +13,14 @@
         <log4j2.version>2.3</log4j2.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <spring.version>3.0.5.RELEASE</spring.version>
+
+        <!-- SonarCloud config -->
+        <sonar.projectKey>brijesh-dvja</sonar.projectKey>
+        <sonar.organization>brijesh-secops</sonar.organization>
+        <sonar.host.url>https://sonarcloud.io</sonar.host.url>
+
+        <!-- JFrog Cloud base URL -->
+        <jfrog.url>https://trialxcztq9.jfrog.io/artifactory</jfrog.url>
     </properties>
 
     <dependencies>
@@ -54,7 +62,6 @@
             <version>1.5.2</version>
         </dependency>
 
-        <!-- AOP dependency -->
         <dependency>
             <groupId>cglib</groupId>
             <artifactId>cglib</artifactId>
@@ -144,6 +151,39 @@
 
     </dependencies>
 
+    <!-- =====================================================
+         REPOSITORIES
+         WHERE MAVEN PULLS DEPENDENCIES FROM
+         Pointing at JFrog virtual repo which proxies
+         Maven Central — all deps go through JFrog
+         ===================================================== -->
+    <repositories>
+        <repository>
+            <id>jfrog-virtual</id>
+            <name>JFrog Virtual Repository</name>
+            <url>${jfrog.url}/maven-virtual</url>
+            <releases><enabled>true</enabled></releases>
+            <snapshots><enabled>true</enabled></snapshots>
+        </repository>
+    </repositories>
+
+    <!-- =====================================================
+         DISTRIBUTION MANAGEMENT
+         WHERE MAVEN PUSHES THE BUILT WAR TO
+         ===================================================== -->
+    <distributionManagement>
+        <repository>
+            <id>jfrog-release</id>
+            <name>JFrog Release</name>
+            <url>${jfrog.url}/secops-pipeline-libs-release-local</url>
+        </repository>
+        <snapshotRepository>
+            <id>jfrog-snapshot</id>
+            <name>JFrog Snapshot</name>
+            <url>${jfrog.url}/secops-pipeline-libs-snapshot-local</url>
+        </snapshotRepository>
+    </distributionManagement>
+
     <build>
         <plugins>
             <plugin>
@@ -155,6 +195,7 @@
                     <target>1.7</target>
                 </configuration>
             </plugin>
+
             <plugin>
                 <groupId>org.eclipse.jetty</groupId>
                 <artifactId>jetty-maven-plugin</artifactId>
@@ -175,6 +216,21 @@
                     </webAppConfig>
                 </configuration>
             </plugin>
+
+            <!-- SonarCloud Scanner -->
+            <plugin>
+                <groupId>org.sonarsource.scanner.maven</groupId>
+                <artifactId>sonar-maven-plugin</artifactId>
+                <version>3.10.0.2594</version>
+            </plugin>
+
+            <!-- Deploy plugin — pushes .war to JFrog -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-deploy-plugin</artifactId>
+                <version>3.1.1</version>
+            </plugin>
+
         </plugins>
     </build>
 </project>
