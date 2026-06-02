@@ -9,7 +9,7 @@
         <mirror>
             <id>jfrog-mirror</id>
             <name>JFrog Virtual Mirror</name>
-            <url>https://trialxcztq9.jfrog.io/artifactory/maven-virtual</url>
+            <url>https://trialxcztq9.jfrog.io/artifactory/secops-pipeline-maven-virtual</url>
             <mirrorOf>*</mirrorOf>
         </mirror>
     </mirrors>
